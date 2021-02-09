@@ -51,7 +51,7 @@ class LbabinzTracker(StockTracker):
             if self._tweet_is_ps5_drop(tweet):
                 match['id'] = tweet.id
                 match['date'] = tweet.date
-                if not isInstance(tweet.outlinks, list):
+                if not isinstance(tweet.outlinks, list):
                     tweet.outlinks = [tweet.outlinks]
                 match['links'] = tweet.outlinks
                 match['content'] = tweet.content
