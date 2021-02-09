@@ -18,16 +18,15 @@ class StockTracker(Thread):
         """
         self._stop_event.set()
         self.request_stock_check() # So that thread isn't blocked
-        logging.info('Stop requested')
+        logging.info("Stop requested for {0}".format(self._name))
 
     def _has_stopped(self):
         """Check whether this thread has been stopped."""
         return self._stop_event.is_set()
 
     def request_stock_check(self):
-        """Unblocks stock checker."""
-        if not self._has_stopped():
-            self._stock_check_sem.release()
+        """Makes stock checker perform a request."""
+        self._stock_check_sem.release()
 
     def set_callback(self, callback):
         """Attaches a function to be called after a stock check is preformed."""
@@ -35,7 +34,7 @@ class StockTracker(Thread):
 
     def _default_callback(self):
         """Default callback function for processing stock check results."""
-        logging.warning("Callback unimplemented for tracker \"{0}\"".format(self._name))
+        logging.warning("Callback unimplemented for {0}".format(self._name))
 
     def _do_stock_check(self):
         """
@@ -48,11 +47,13 @@ class StockTracker(Thread):
             raise Exception('StockTracker is an abstract class and cannot be instantiated directly')
 
     def run(self):
-        self._stock_check_sem.acquire()
-        if self._has_stopped():
-            return
-        result = self._do_stock_check()
-        self._callback(result)
+        while True:
+            self._stock_check_sem.acquire()
+            if self._has_stopped():
+                break
+            result = self._do_stock_check()
+            self._callback(result)
+        logging.info("Exiting thread {0}".format(self._name))
 
 class DropResult:
     def __init__(self, date, links, info):

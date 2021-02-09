@@ -2,6 +2,7 @@
 # App to help get a PS5
 
 import time
+from datetime import datetime, timezone
 from AppUtils import *
 from LbabinzTracker import *
 
@@ -22,7 +23,7 @@ def main():
     logging.info('Started app')
 
     trackers = []
-    trackers.append(LbabinzTracker())
+    trackers.append(LbabinzTracker(datetime.now(timezone.utc)))
     # TODO: implement NowInStockTracker
     # trackers.append(NowInStockTracker())
     for tracker in trackers:
