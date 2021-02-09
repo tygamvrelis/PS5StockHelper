@@ -43,7 +43,7 @@ def main():
         while True:
             # At the start of each period, tell each tracker to perform a stock
             # check. Handling of results is dealt with in the callback function
-            logger.info('Requesting stock checks...')
+            logger.info('{0}: Requesting stock checks...'.format(datetime.now()))
             for tracker in trackers:
                 tracker.request_stock_check()
             time.sleep(period)
