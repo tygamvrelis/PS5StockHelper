@@ -11,7 +11,6 @@ As of now, this checks:
 - Lbabinz's Twitter feed for PlayStation 5 tweets
 - The Sony PlayStation 5 CA Tracker on nowinstock.net
 
-Only tested on Windows 10.
-
 # Requirements
 You need Python 3.8 so that snscrape will work.
+Has only been tested on Windows 10.
