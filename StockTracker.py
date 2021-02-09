@@ -1,9 +1,12 @@
 # Stock tracker base class
+# Author: Tyler Gamvrelis
 
 from threading import Thread, Event, Semaphore
 import logging
 
 class StockTracker(Thread):
+    """Functionalities and logic implemented by all stock trackers"""
+
     def __init__(self, group=None, target=None, name=None):
         super(StockTracker, self).__init__(group=group, target=target, name=name)
         self._name = name
@@ -57,6 +60,7 @@ class StockTracker(Thread):
         self._logger.info('Exiting thread {0}'.format(self._name))
 
 class DropResult:
+    """Container to organize drop results"""
     def __init__(self, date, links, info):
         self.date = date
         self.links = links # List of links

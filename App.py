@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # App to help get a PS5
+# Author: Tyler Gamvrelis
 
 import time
 import webbrowser
@@ -9,8 +10,8 @@ from LbabinzTracker import *
 from NowInStockTracker import *
 
 def stock_check_callback(result):
-    # TODO: implement callback function for processing stock check results.
-    # Should check for duplicates and open browser if no dups detected
+    # TODO: Consider checking for duplicate drops across trackers within last
+    # X seconds
     logger = logging.getLogger(__name__)
     logger.debug(result)
     if result == None:

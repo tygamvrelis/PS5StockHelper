@@ -1,4 +1,5 @@
 # Checks for drops on https://twitter.com/Lbabinz
+# Author: Tyler Gamvrelis
 # Sources:
 #    https://medium.com/better-programming/how-to-scrape-tweets-with-snscrape-90124ed006af
 
@@ -7,12 +8,14 @@ import snscrape.modules.twitter as sntwitter
 from StockTracker import *
 
 class LbabinzTracker(StockTracker):
+    """Checks for drops on twitter.com/Lbabinz"""
+
     def __init__(self, start_time):
         super(LbabinzTracker, self).__init__(name='Lbabinz_thread')
         self._start_time = start_time
         self._filters = ['PlayStation 5']
         self._filters = [filt.lower() for filt in self._filters] # Automate this, just in case
-        self._window = 100 # Maximum number of tweets to pull at a time
+        self._window = 5 # Maximum number of tweets to pull at a time
         self._last_match = {}
         self._last_tweet_time = None
 

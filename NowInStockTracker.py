@@ -1,4 +1,5 @@
 # Checks for drops on https://www.nowinstock.net/ca/videogaming/consoles/sonyps5/
+# Author: Tyler Gamvrelis
 # Sources:
 #    https://medium.com/@speedforcerun/python-crawler-http-error-403-forbidden-1623ae9ba0f
 
@@ -8,6 +9,8 @@ from bs4 import BeautifulSoup
 from StockTracker import *
 
 class NowInStockTracker(StockTracker):
+    """Checks for drops on nowinstock.net"""
+    
     def __init__(self):
         super(NowInStockTracker, self).__init__(name='NowInStock_thread')
         self._url = 'https://www.nowinstock.net/ca/videogaming/consoles/sonyps5/'
