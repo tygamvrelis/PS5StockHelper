@@ -8,7 +8,7 @@ from StockTracker import *
 
 class LbabinzTracker(StockTracker):
     def __init__(self, start_time):
-        super(LbabinzTracker, self).__init__(name="Lbabinz_thread")
+        super(LbabinzTracker, self).__init__(name='Lbabinz_thread')
         self._start_time = start_time
         self._filters = ['PlayStation 5']
         self._filters = [filt.lower() for filt in self._filters] # Automate this, just in case
@@ -29,7 +29,8 @@ class LbabinzTracker(StockTracker):
         # of this writing, we get batches of tweets 100 at a time. If we were to
         # use the CLI for snscrape, we could change this so we only retrieve as 
         # many tweets as specified in the window, then read in the JSON output. 
-        # This could be considered as a future improvement
+        # This could be considered as a future improvement. Alternatively, could
+        # try scraping the HTML
         match = {}
         scraper = sntwitter.TwitterUserScraper('Lbabinz')
         for i,tweet in enumerate(scraper.get_items()):

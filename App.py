@@ -6,6 +6,7 @@ import webbrowser
 from datetime import datetime, timezone
 from AppUtils import *
 from LbabinzTracker import *
+from NowInStockTracker import *
 
 def stock_check_callback(result):
     # TODO: implement callback function for processing stock check results.
@@ -14,6 +15,7 @@ def stock_check_callback(result):
     logger.debug(result)
     if result == None:
         return
+    logger.info(result.info)
     for link in result.links:
         webbrowser.open(link)
 
@@ -32,8 +34,7 @@ def main():
 
     trackers = []
     trackers.append(LbabinzTracker(datetime.now(timezone.utc)))
-    # TODO: implement NowInStockTracker
-    # trackers.append(NowInStockTracker())
+    trackers.append(NowInStockTracker())
     for tracker in trackers:
         tracker.set_callback(stock_check_callback)
         tracker.start()
@@ -42,21 +43,21 @@ def main():
         while True:
             # At the start of each period, tell each tracker to perform a stock
             # check. Handling of results is dealt with in the callback function
-            logger.info("Requesting stock check...")
+            logger.info('Requesting stock checks...')
             for tracker in trackers:
                 tracker.request_stock_check()
             time.sleep(period)
 
     except KeyboardInterrupt as e:
-        print("Interrupted: {0}".format(e))
+        print('Interrupted: {0}'.format(e))
         # Clean up trackers
         for tracker in trackers:
             tracker.stop()
         for tracker in trackers:
             tracker.join()
-        logger.info("Exiting...")
+        logger.info('Exiting...')
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
     sys.exit(0)
     
