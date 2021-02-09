@@ -1,9 +1,14 @@
 #!/usr/bin/python
 # App to help get a PS5
-# Useful:
-#    https://medium.com/better-programming/how-to-scrape-tweets-with-snscrape-90124ed006af
-import snscrape.modules.twitter as sntwitter
+
+import time
 from AppUtils import *
+from LbabinzTracker import *
+
+def stock_check_callback(result):
+    # TODO: implement callback function for processing stock check results.
+    # Should check for duplicates and open browser if no dups detected
+    print(result)
 
 def main():
     args = parse_args()
@@ -16,27 +21,33 @@ def main():
         logging.basicConfig(level=numeric_level)
     logging.info('Started app')
 
-    # Creating list to append tweet data to
-    tweets_list = []
-    filters = ['PlayStation 5']
-    filters = [filt.lower() for filt in filters] # Automate this, just in case
+    trackers = []
+    trackers.append(LbabinzTracker())
+    # TODO: implement NowInStockTracker
+    # trackers.append(NowInStockTracker())
+    for tracker in trackers:
+        tracker.set_callback(stock_check_callback)
+        tracker.start()
 
-    # PoC:
-    # TODO: At the start of each period, make a scraper and check the tweets within the window. If any new tweets that match window
-    scraper = sntwitter.TwitterUserScraper('Lbabinz')
-    for i,tweet in enumerate(sntwitter.TwitterUserScraper('Lbabinz').get_items()):
-        if i>100:
-            break
-        for filt in filters:
-            if filt in tweet.content.lower():
-                tweets_list.append({'date':tweet.date, 'content':tweet.content, 'links':tweet.outlinks})
-
-    [print(i) for i in tweets_list]
-
-if __name__ == "__main__":
     try:
-        main()
-        sys.exit(0)
+        while True:
+            # At the start of each period, tell each tracker to perform a stock
+            # check. Handling of results is dealt with in the callback function
+            logging.info("Requesting stock check...")
+            for tracker in trackers:
+                tracker.request_stock_check()
+            time.sleep(period)
+
     except KeyboardInterrupt as e:
         print("Interrupted: {0}".format(e))
-        sys.exit(1)
+        # Clean up trackers
+        for tracker in trackers:
+            tracker.stop()
+        for tracker in trackers:
+            tracker.join()
+        logging.info("Exiting...")
+
+if __name__ == "__main__":
+    main()
+    sys.exit(0)
+    
