@@ -2,7 +2,6 @@
 # Sources:
 #    https://medium.com/better-programming/how-to-scrape-tweets-with-snscrape-90124ed006af
 
-import logging
 from datetime import datetime, date
 import snscrape.modules.twitter as sntwitter
 from StockTracker import *
@@ -52,9 +51,11 @@ class LbabinzTracker(StockTracker):
             if self._tweet_is_ps5_drop(tweet):
                 match['id'] = tweet.id
                 match['date'] = tweet.date
+                if not isInstance(tweet.outlinks, list):
+                    tweet.outlinks = [tweet.outlinks]
                 match['links'] = tweet.outlinks
                 match['content'] = tweet.content
-                logging.info('Found match!')
+                self._logger.info('Found match!')
         if len(match) == 0:
             return None
         else:

@@ -9,7 +9,8 @@ class StockTracker(Thread):
         self._name = name
         self._stock_check_sem = Semaphore(0)
         self._stop_event = Event()
-        self._callback = self._default_callback()
+        self._callback = self._default_callback
+        self._logger = logging.getLogger(__name__)
 
     def stop(self):
         """
@@ -18,7 +19,7 @@ class StockTracker(Thread):
         """
         self._stop_event.set()
         self.request_stock_check() # So that thread isn't blocked
-        logging.info("Stop requested for {0}".format(self._name))
+        self._logger.info("Stop requested for {0}".format(self._name))
 
     def _has_stopped(self):
         """Check whether this thread has been stopped."""
@@ -34,7 +35,7 @@ class StockTracker(Thread):
 
     def _default_callback(self):
         """Default callback function for processing stock check results."""
-        logging.warning("Callback unimplemented for {0}".format(self._name))
+        self._logger.warning("Callback unimplemented for {0}".format(self._name))
 
     def _do_stock_check(self):
         """
@@ -53,10 +54,10 @@ class StockTracker(Thread):
                 break
             result = self._do_stock_check()
             self._callback(result)
-        logging.info("Exiting thread {0}".format(self._name))
+        self._logger.info("Exiting thread {0}".format(self._name))
 
 class DropResult:
     def __init__(self, date, links, info):
         self.date = date
-        self.links = links
+        self.links = links # List of links
         self.info = info
