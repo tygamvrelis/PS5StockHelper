@@ -18,7 +18,6 @@ def add_input(input_queue):
     while True:
         input_queue.put(sys.stdin.readline())
 
-
 def stock_check_callback(audio_notifier, result):
     # TODO: Consider checking for duplicate drops across trackers within last
     # X seconds
@@ -31,7 +30,6 @@ def stock_check_callback(audio_notifier, result):
         webbrowser.open(link)
     if audio_notifier:
         audio_notifier.start_audio()
-
 
 def main():
     args = parse_args()
@@ -66,17 +64,25 @@ def main():
     input_thread.start()
 
     try:
+        ticks = 0
         while True:
-            # At the start of each period, tell each tracker to perform a stock
-            # check. Handling of results is dealt with in the callback function
-            logger.info('{0}: Requesting stock checks...'.format(datetime.now()))
-            for tracker in trackers:
-                tracker.request_stock_check()
+            if ticks % period == 0:
+                # At the start of each period, tell each tracker to perform a
+                # stock check. Handling of results is dealt with in the callback
+                # function
+                logger.info(
+                    '{0}: Requesting stock checks...'.format(datetime.now())
+                )
+                for tracker in trackers:
+                    tracker.request_stock_check()
             
-            # Any user input stops the audio notification
+            # Any user input containing enter stops the audio notification
             if audio_notifier and not input_queue.empty():
                 audio_notifier.stop_audio()
-            time.sleep(period)
+
+            # Bookkeeping
+            ticks += 1
+            time.sleep(1)
 
     except KeyboardInterrupt as e:
         print('Interrupted: {0}'.format(e))

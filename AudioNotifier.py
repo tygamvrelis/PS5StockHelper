@@ -46,7 +46,7 @@ class AudioNotifier(Thread):
                 self._play_audio = self._cmd_queue.get()
             else:
                 # Play sound, then apply new commands
-                beepy.beep(sound='ready')
+                beepy.beep(sound='ready') # Blocking call
                 while not self._cmd_queue.empty():
                     self._play_audio = self._cmd_queue.get()
         self._logger.info('Exiting thread audio_thread')
