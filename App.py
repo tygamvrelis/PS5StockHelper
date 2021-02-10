@@ -36,6 +36,7 @@ def main():
     period = args['period']
     log_level = args['log']
     mute = args['mute']
+    test_mode = args['test']
     logger = logging.getLogger(__name__)
     if log_level != None:
         numeric_level = getattr(logging, log_level.upper(), None)
@@ -44,6 +45,8 @@ def main():
         logging.basicConfig()
         logger.setLevel(numeric_level)
     logger.info('Started app')
+    if test_mode:
+        logger.info('~~TEST MODE~~')
 
     audio_notifier = None
     if not mute:
@@ -55,6 +58,8 @@ def main():
     trackers.append(NowInStockTracker())
     for tracker in trackers:
         tracker.set_callback(partial(stock_check_callback, audio_notifier))
+        if test_mode:
+            tracker.enable_test_mode()
         tracker.start()
 
     # https://stackoverflow.com/questions/2408560/python-nonblocking-console-input

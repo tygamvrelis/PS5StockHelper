@@ -8,7 +8,13 @@ import snscrape.modules.twitter as sntwitter
 from StockTracker import *
 
 class LbabinzTracker(StockTracker):
-    """Checks for drops on twitter.com/Lbabinz"""
+    """
+    Checks for drops on twitter.com/Lbabinz.
+
+    Test mode: looks at as many of Lbabinz's tweets as we can and tries to
+    locate a PS5 drop. Basically, it drops our logic that only looks for the
+    drops in the most recent tweets.
+    """
 
     def __init__(self, start_time):
         super(LbabinzTracker, self).__init__(name='Lbabinz_thread')
@@ -26,6 +32,14 @@ class LbabinzTracker(StockTracker):
                 return True
         return False
 
+    def enable_test_mode(self):
+        """
+        Test mode allows us to see the behaviour of this object during a
+        simulated drop.
+        """
+        self._is_test_mode = True
+        self._window = float('inf') # Find a tweet at any cost >:)
+
     def _do_stock_check(self):
         # Make a scraper and check the tweets within the window. Note that the
         # Python API for snscrape doesn't give us many options, for example, as
@@ -37,7 +51,8 @@ class LbabinzTracker(StockTracker):
         match = {}
         scraper = sntwitter.TwitterUserScraper('Lbabinz')
         for i,tweet in enumerate(scraper.get_items()):
-            if i > self._window or len(match) != 0:
+            # Stop if we reach our iteration limit or we find a match
+            if i >= self._window or len(match) != 0:
                 break
             # Update most recent Tweet time. If there are no new Tweets since
             # our last check, then break
@@ -48,7 +63,7 @@ class LbabinzTracker(StockTracker):
                     break
             # Check whether this tweet is older than the start time of the app.
             # If so, we can break
-            if tweet.date < self._start_time:
+            if not self._is_test_mode and tweet.date < self._start_time:
                 break
             # If we make it here, then there's a new tweet. Let's check this
             # tweet to see if it's a PS5 drop

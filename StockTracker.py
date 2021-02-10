@@ -5,7 +5,7 @@ from threading import Thread, Event, Semaphore
 import logging
 
 class StockTracker(Thread):
-    """Functionalities and logic implemented by all stock trackers"""
+    """Functionalities and logic implemented by all stock trackers."""
 
     def __init__(self, group=None, target=None, name=None):
         super(StockTracker, self).__init__(group=group, target=target, name=name)
@@ -14,6 +14,7 @@ class StockTracker(Thread):
         self._stop_event = Event()
         self._callback = self._default_callback
         self._logger = logging.getLogger(__name__)
+        self._is_test_mode = False
 
     def stop(self):
         """
@@ -23,6 +24,20 @@ class StockTracker(Thread):
         self._stop_event.set()
         self.request_stock_check() # So that thread isn't blocked
         self._logger.info('Stop requested for {0}'.format(self._name))
+
+    def enable_test_mode(self):
+        """
+        Test mode allows us to see the behaviour of this object during a
+        simulated drop.
+        """
+        self._is_test_mode = True
+
+    def disable_test_mode(self):
+        """
+        Test mode allows us to see the behaviour of this object during a
+        simulated drop.
+        """
+        self._is_test_mode = False
 
     def _has_stopped(self):
         """Check whether this thread has been stopped."""
@@ -60,8 +75,17 @@ class StockTracker(Thread):
         self._logger.info('Exiting thread {0}'.format(self._name))
 
 class DropResult:
-    """Container to organize drop results"""
+    """Container to organize drop results."""
     def __init__(self, date, links, info):
         self.date = date
         self.links = links # List of links
         self.info = info
+
+    def __str__(self):
+        st = 'Drop info:\n'
+        st += '\tDate: ' + str(self.date) + '\n'
+        st += '\tInfo: ' + self.info + '\n'
+        st += '\tLinks:\n'
+        for link in self.links:
+            st += '\t\t' + link + '\n'
+        return st

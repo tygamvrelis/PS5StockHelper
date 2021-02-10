@@ -9,7 +9,12 @@ from bs4 import BeautifulSoup
 from StockTracker import *
 
 class NowInStockTracker(StockTracker):
-    """Checks for drops on nowinstock.net"""
+    """
+    Checks for drops on nowinstock.net.
+
+    Test mode: pretends that one of the entries on the site's status table says
+    "In Stock".
+    """
     
     def __init__(self):
         super(NowInStockTracker, self).__init__(name='NowInStock_thread')
@@ -27,7 +32,7 @@ class NowInStockTracker(StockTracker):
         self._trackers = None
 
     def is_in_stock(self, status):
-        """Checks whether the given status means the item is in stock"""
+        """Checks whether the given status means the item is in stock."""
         return status != 'Out of Stock'
 
     def _do_stock_check(self):
@@ -43,7 +48,13 @@ class NowInStockTracker(StockTracker):
             text = td.parent.a.text
             trackers[text] = (status, link)
         if not self._trackers:
-            self._trackers = trackers
+            self._trackers = trackers.copy()
+
+        if self._is_test_mode:
+            # Drop first item
+            for k, v in trackers.items():
+                trackers[k] = ('In Stock', v[1])
+                break
 
         # Compare current stock info to known stock info. Assume keys don't
         # change in time

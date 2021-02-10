@@ -7,7 +7,7 @@ import logging
 import beepy
 
 class AudioNotifier(Thread):
-    """Notifies user of a drop using an audio track"""
+    """Notifies user of a drop using an audio track."""
 
     def __init__(self):
         super(AudioNotifier, self).__init__(name='audio_thread')
