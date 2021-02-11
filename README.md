@@ -8,6 +8,7 @@ To be clear: this is NOT a bot to help you get through checkout quickly. That pa
 As of now, this app checks the following sites for stock:
 - Lbabinz's Twitter feed for PlayStation 5 tweets
 - The Sony PlayStation 5 CA Tracker on nowinstock.net
+
 Since this app doesn't go to the retailers (e.g., Best Buy) directly, it doesn't need to worry about rotating user agents, nor do you need to worry about your IP address getting blocked.
 
 FYI: there are probably lots of edge cases I'm not handling. I just wanted something quick that would get the job done. If you can make it better, feel free to fork or submit a PR. Also, this is only focused on Canadian stock, although in principle it could easily be changed to work for stock in other countries too.
