@@ -3,10 +3,13 @@
 # Sources:
 #    https://medium.com/@speedforcerun/python-crawler-http-error-403-forbidden-1623ae9ba0f
 
-from urllib.request import urlopen, Request
 from datetime import datetime, timezone
+from urllib.request import urlopen, Request
+
 from bs4 import BeautifulSoup
+
 from StockTracker import *
+
 
 class NowInStockTracker(StockTracker):
     """
@@ -21,8 +24,8 @@ class NowInStockTracker(StockTracker):
         self._url = 'https://www.nowinstock.net/ca/videogaming/consoles/sonyps5/'
         self._headers = {
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) ' 
-                'AppleWebKit/537.11 (KHTML, like Gecko) '
-                'Chrome/23.0.1271.64 Safari/537.11',
+            'AppleWebKit/537.11 (KHTML, like Gecko) '
+            'Chrome/23.0.1271.64 Safari/537.11',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
             'Accept-Encoding': 'none',
@@ -31,7 +34,7 @@ class NowInStockTracker(StockTracker):
         }
         self._trackers = None
 
-    def is_in_stock(self, status):
+    def _is_in_stock(self, status):
         """Checks whether the given status means the item is in stock."""
         return status != 'Out of Stock'
 
@@ -60,8 +63,8 @@ class NowInStockTracker(StockTracker):
         # change in time
         nothing_new = True
         for k, v in trackers.items():
-            in_stock = self.is_in_stock(v[0])
-            if in_stock and not self.is_in_stock(self._trackers[k][0]):
+            in_stock = self._is_in_stock(v[0])
+            if in_stock and not self._is_in_stock(self._trackers[k][0]):
                 # There's a new drop!
                 nothing_new = False
                 link = v[1]

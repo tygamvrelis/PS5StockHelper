@@ -1,10 +1,11 @@
 # Notify user via audio
 # Author: Tyler Gamvrelis
 
-from threading import Thread, Event
-from queue import Queue
-import logging
 import beepy
+import logging
+from queue import Queue
+from threading import Thread, Event
+
 
 class AudioNotifier(Thread):
     """Notifies user of a drop using an audio track."""
