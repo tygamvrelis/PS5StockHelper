@@ -3,9 +3,10 @@
 # Sources:
 #    https://medium.com/better-programming/how-to-scrape-tweets-with-snscrape-90124ed006af
 
-from datetime import datetime, date
 import snscrape.modules.twitter as sntwitter
+
 from StockTracker import *
+
 
 class LbabinzTracker(StockTracker):
     """

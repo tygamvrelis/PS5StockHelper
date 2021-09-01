@@ -1,8 +1,9 @@
 # Stock tracker base class
 # Author: Tyler Gamvrelis
 
-from threading import Thread, Event, Semaphore
 import logging
+from threading import Event, Semaphore, Thread
+
 
 class StockTracker(Thread):
     """Functionalities and logic implemented by all stock trackers."""
@@ -73,6 +74,7 @@ class StockTracker(Thread):
             result = self._do_stock_check()
             self._callback(result)
         self._logger.info('Exiting thread {0}'.format(self._name))
+
 
 class DropResult:
     """Container to organize drop results."""

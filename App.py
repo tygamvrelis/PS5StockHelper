@@ -2,34 +2,38 @@
 # App to help get a PS5
 # Author: Tyler Gamvrelis
 
-import time
-import sys
-import threading
-from queue import Queue
-import webbrowser
 from datetime import datetime, timezone
 from functools import partial
+from queue import Queue
+import sys
+import threading
+import time
+import webbrowser
+
 from AppUtils import *
+from AudioNotifier import *
 from LbabinzTracker import *
 from NowInStockTracker import *
-from AudioNotifier import *
+
 
 def add_input(input_queue):
     while True:
         input_queue.put(sys.stdin.readline())
+
 
 def stock_check_callback(audio_notifier, result):
     # TODO: Consider checking for duplicate drops across trackers within last
     # X seconds
     logger = logging.getLogger(__name__)
     logger.debug(result)
-    if result == None:
+    if result is None:
         return
     logger.info(result.info)
     for link in result.links:
         webbrowser.open(link)
     if audio_notifier:
         audio_notifier.start_audio()
+
 
 def main():
     args = parse_args()
@@ -38,7 +42,7 @@ def main():
     mute = args['mute']
     test_mode = args['test']
     logger = logging.getLogger(__name__)
-    if log_level != None:
+    if log_level is not None:
         numeric_level = getattr(logging, log_level.upper(), None)
         if not isinstance(numeric_level, int):
             raise ValueError('Invalid log level: %s' % log_level)
@@ -101,7 +105,7 @@ def main():
             audio_notifier.join()
         logger.info('Exiting...')
 
+
 if __name__ == '__main__':
     main()
     sys.exit(0)
-    
