@@ -2,6 +2,7 @@
 # App to help get a PS5
 # Author: Tyler Gamvrelis
 
+# Standard library imports
 from datetime import datetime, timezone
 from functools import partial
 from queue import Queue
@@ -11,11 +12,18 @@ import threading
 import time
 import webbrowser
 
-from AppUtils import parse_args
+# Local application imports
+from AppUtils import parse_args, setup_logger
 from AudioNotifier import AudioNotifier
 from Emailer import Emailer
 from LbabinzTracker import LbabinzTracker
 from NowInStockTracker import NowInStockTracker
+
+
+# Globals
+logger = logging.getLogger(__name__)
+snscrape_logger = logging.getLogger('snscrape')
+snscrape_logger.setLevel(logging.WARNING)
 
 
 def add_input(input_queue):
@@ -26,7 +34,6 @@ def add_input(input_queue):
 def stock_check_callback(audio_notifier, emailer, result):
     # TODO: Consider checking for duplicate drops across trackers within last
     # X seconds
-    logger = logging.getLogger(__name__)
     logger.debug(result)
     if result is None:
         return
@@ -46,13 +53,8 @@ def main():
     mute = args['mute']
     test_mode = args['test']
     send_emails = args['email']
-    logger = logging.getLogger(__name__)
-    if log_level is not None:
-        numeric_level = getattr(logging, log_level.upper(), None)
-        if not isinstance(numeric_level, int):
-            raise ValueError(f'Invalid log level: {log_level}')
-        logging.basicConfig()
-        logger.setLevel(numeric_level)
+
+    setup_logger(log_level, __file__)
     logger.info('Started app')
     if test_mode:
         logger.info('~~TEST MODE~~')

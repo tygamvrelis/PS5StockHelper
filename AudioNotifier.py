@@ -1,10 +1,17 @@
 # Notify user via audio
 # Author: Tyler Gamvrelis
 
-import beepy
+# Standard library imports
 import logging
 from queue import Queue
 from threading import Thread, Event
+
+# Third party imports
+import beepy
+
+
+# Globals
+logger = logging.getLogger(__name__)
 
 
 class AudioNotifier(Thread):
@@ -15,7 +22,6 @@ class AudioNotifier(Thread):
         self._cmd_queue = Queue() # Infinite queue
         self._stop_event = Event()
         self._play_audio = False
-        self._logger = logging.getLogger(__name__)
 
     def stop(self):
         """
@@ -24,7 +30,7 @@ class AudioNotifier(Thread):
         """
         self._stop_event.set()
         self.stop_audio() # To ensure thread is not blocked
-        self._logger.info('Stop requested for audio_thread')
+        logger.debug('Stop requested for audio_thread')
 
     def _has_stopped(self):
         """Check whether this thread has been stopped."""
@@ -50,4 +56,4 @@ class AudioNotifier(Thread):
                 beepy.beep(sound='ready') # Blocking call
                 while not self._cmd_queue.empty():
                     self._play_audio = self._cmd_queue.get()
-        self._logger.info('Exiting thread audio_thread')
+        logger.debug('Exiting thread audio_thread')

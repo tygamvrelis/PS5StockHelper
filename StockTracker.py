@@ -1,8 +1,13 @@
 # Stock tracker base class
 # Author: Tyler Gamvrelis
 
+# Standard library imports
 import logging
 from threading import Event, Semaphore, Thread
+
+
+# Globals
+logger = logging.getLogger(__name__)
 
 
 class StockTracker(Thread):
@@ -14,7 +19,6 @@ class StockTracker(Thread):
         self._stock_check_sem = Semaphore(0)
         self._stop_event = Event()
         self._callback = self._default_callback
-        self._logger = logging.getLogger(__name__)
         self._is_test_mode = False
 
     def stop(self):
@@ -24,7 +28,7 @@ class StockTracker(Thread):
         """
         self._stop_event.set()
         self.request_stock_check() # So that thread isn't blocked
-        self._logger.info('Stop requested for {0}'.format(self._name))
+        logger.debug('Stop requested for {0}'.format(self._name))
 
     def enable_test_mode(self):
         """
@@ -54,7 +58,7 @@ class StockTracker(Thread):
 
     def _default_callback(self):
         """Default callback function for processing stock check results."""
-        self._logger.warning('Callback unimplemented for {0}'.format(self._name))
+        logger.warning('Callback unimplemented for {0}'.format(self._name))
 
     def _do_stock_check(self):
         """
@@ -73,7 +77,7 @@ class StockTracker(Thread):
                 break
             result = self._do_stock_check()
             self._callback(result)
-        self._logger.info('Exiting thread {0}'.format(self._name))
+        logger.debug('Exiting thread {0}'.format(self._name))
 
 
 class DropResult:

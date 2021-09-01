@@ -3,12 +3,17 @@
 # Sources:
 #     https://github.com/kootenpv/yagmail
 
+# Standard library imports
 import json
 import keyring
 import logging
+
+# Third party imports
 import yagmail
 
 
+# Globals
+logger = logging.getLogger(__name__)
 EMAIL_INFO_FNAME = 'email_info.json'
 
 
@@ -17,7 +22,6 @@ class Emailer:
     def __init__(self):
         self._username = None
         self._dest_addr = None
-        self._logger = logging.getLogger(__name__)
         self._load_info()
         self._yag = yagmail.SMTP(self._username)
 
@@ -26,7 +30,7 @@ class Emailer:
             data = json.load(f)
             self._username = data['gmail_username']
             self._dest_addr = data['dest_address']
-            self._logger.info(
+            logger.info(
                 f'Sending emails from {self._username}@gmail.com '
                 f'to {self._dest_addr}'
             )
@@ -48,4 +52,4 @@ class Emailer:
         for link in result.links:
             body += f'\t<a href="{link}">{link}</a>\n'
         self._yag.send(self._dest_addr, subject, contents=body)
-        self._logger.debug(f'Sent email to {self._dest_addr}')
+        logger.debug(f'Sent email to {self._dest_addr}')
