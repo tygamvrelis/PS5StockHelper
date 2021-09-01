@@ -87,6 +87,7 @@ def main():
             
             # Any user input containing enter stops the audio notification
             if audio_notifier and not input_queue.empty():
+                input_queue.get()
                 audio_notifier.stop_audio()
 
             # Bookkeeping
