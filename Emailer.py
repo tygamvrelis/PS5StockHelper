@@ -35,15 +35,17 @@ class Emailer:
         if keyring.get_credential('yagmail', username=self._username) is None:
             subject = 'PS5 Stock Helper Test Email'
             body = 'This is a test to verify that email notifications are '\
-                   'set up properly. If you receive this, you\'re good to go!'
+                   'set up properly. If you\'ve received this then you\'re '\
+                   'good to go!'
             self._yag.send(self._dest_addr, subject, contents=body)
 
     def send_drop_message(self, result):
         subject = f'PS5 Stock Helper - {result.info}'
         body = ''
-        body += f'Date: {result.data}\n'
+        body += f'Date: {result.date}\n'
         body += f'Info: {result.info}\n'
         body += 'Links:\n'
         for link in result.links:
             body += f'\t<a href="{link}">{link}</a>\n'
         self._yag.send(self._dest_addr, subject, contents=body)
+        self._logger.debug(f'Sent email to {self._dest_addr}')
