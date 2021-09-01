@@ -5,15 +5,17 @@
 from datetime import datetime, timezone
 from functools import partial
 from queue import Queue
+import logging
 import sys
 import threading
 import time
 import webbrowser
 
-from AppUtils import *
-from AudioNotifier import *
-from LbabinzTracker import *
-from NowInStockTracker import *
+from AppUtils import parse_args
+from AudioNotifier import AudioNotifier
+from Emailer import Emailer
+from LbabinzTracker import LbabinzTracker
+from NowInStockTracker import NowInStockTracker
 
 
 def add_input(input_queue):
@@ -21,7 +23,7 @@ def add_input(input_queue):
         input_queue.put(sys.stdin.readline())
 
 
-def stock_check_callback(audio_notifier, result):
+def stock_check_callback(audio_notifier, emailer, result):
     # TODO: Consider checking for duplicate drops across trackers within last
     # X seconds
     logger = logging.getLogger(__name__)
@@ -33,6 +35,8 @@ def stock_check_callback(audio_notifier, result):
         webbrowser.open(link)
     if audio_notifier:
         audio_notifier.start_audio()
+    if emailer:
+        emailer.send_drop_message(result)
 
 
 def main():
@@ -41,16 +45,22 @@ def main():
     log_level = args['log']
     mute = args['mute']
     test_mode = args['test']
+    send_emails = args['email']
     logger = logging.getLogger(__name__)
     if log_level is not None:
         numeric_level = getattr(logging, log_level.upper(), None)
         if not isinstance(numeric_level, int):
-            raise ValueError('Invalid log level: %s' % log_level)
+            raise ValueError(f'Invalid log level: {log_level}')
         logging.basicConfig()
         logger.setLevel(numeric_level)
     logger.info('Started app')
     if test_mode:
         logger.info('~~TEST MODE~~')
+
+    emailer = None
+    if send_emails:
+        emailer = Emailer()
+        emailer.save_credentials_if_needed()
 
     audio_notifier = None
     if not mute:
@@ -61,7 +71,9 @@ def main():
     trackers.append(LbabinzTracker(datetime.now(timezone.utc)))
     trackers.append(NowInStockTracker())
     for tracker in trackers:
-        tracker.set_callback(partial(stock_check_callback, audio_notifier))
+        tracker.set_callback(
+            partial(stock_check_callback, audio_notifier, emailer)
+        )
         if test_mode:
             tracker.enable_test_mode()
         tracker.start()
@@ -80,7 +92,7 @@ def main():
                 # stock check. Handling of results is dealt with in the callback
                 # function
                 logger.info(
-                    '{0}: Requesting stock checks...'.format(datetime.now())
+                    f'{datetime.now()}: Requesting stock checks...'
                 )
                 for tracker in trackers:
                     tracker.request_stock_check()
