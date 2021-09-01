@@ -20,7 +20,7 @@ You can download Python 3.8 here:
 - [Windows](https://www.python.org/getit/windows/)
 - [MacOS](https://www.python.org/downloads/macos/)
 
-Once you've downloaded Python 3.8 and the files for this project, the next step is to install the dependencies. To do this, open a terminal in the directory where you downloaded the project files, and run the command `pip install -r requirements.txt`. You should now be good to go!
+Once you've downloaded Python 3.8 and the files for this project, the next step is to install the dependencies. To do this, open a terminal in the directory where you downloaded the project files, and run the command `python -m pip install -r requirements.txt`. You should now be good to go!
 
 # Usage
 To run this application, open a terminal in the project directory and enter the command `python App.py`. That's it! Now you just wait, and whenever there's a drop an audio track will be played to notify you.
