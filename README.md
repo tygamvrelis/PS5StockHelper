@@ -26,3 +26,13 @@ Once you've downloaded Python 3.8 and the files for this project, the next step 
 To run this application, open a terminal in the project directory and enter the command `python App.py`. That's it! Now you just wait, and whenever there's a drop an audio track will be played to notify you.
 
 If you want to see a list of usage options, enter `python App.py --help`. For example, you can simulate a drop by entering the command `python App.py --test`.
+
+This app also supports email notifications. To use this feature, you will need a gmail account and will need to [enable less secure apps](https://support.google.com/accounts/answer/6010255?hl=en). Once you've done this, open the `email_info.json` file and fill in the `gmail_username` field with the username of this gmail account. The stock helper app will send emails _from_ this account. Next, fill in the `dest_address` field with the email address that you want stock notification emails _to be sent to_. A made-up example is shown below, which will result in emails being sent _from_ johndoe@gmail.com _to_ foobar@gmail.com:
+```json
+{
+	"gmail_username": "johndoe",
+	"dest_address": "foobar@gmail.com"
+}
+```
+
+With all this done, start the app using the `--email` option, i.e., `python App.py --email`. If it is your first time starting the stock helper app with this gmail account, you will be asked for your password. This password will be stored in your system's [keyring](https://pypi.org/project/keyring/) so that you don't need to enter it next time. If your credentials are valid, then you should receive a test email confirming that email notifications are working. If that's the case, then you should receive an email whenever a drop is detected!

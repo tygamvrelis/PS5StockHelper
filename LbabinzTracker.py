@@ -3,9 +3,18 @@
 # Sources:
 #    https://medium.com/better-programming/how-to-scrape-tweets-with-snscrape-90124ed006af
 
+# Standard library imports
+import logging
+
+# Third party imports
 import snscrape.modules.twitter as sntwitter
 
+# Local application imports
 from StockTracker import *
+
+
+# Globals
+logger = logging.getLogger(__name__)
 
 
 class LbabinzTracker(StockTracker):
@@ -75,7 +84,7 @@ class LbabinzTracker(StockTracker):
                     tweet.outlinks = [tweet.outlinks]
                 match['links'] = tweet.outlinks
                 match['content'] = tweet.content
-                self._logger.info('Found match!')
+                logger.debug('Found match!')
         if len(match) == 0:
             return None
         else:

@@ -3,11 +3,14 @@
 # Sources:
 #    https://medium.com/@speedforcerun/python-crawler-http-error-403-forbidden-1623ae9ba0f
 
+# Standard library imports
 from datetime import datetime, timezone
 from urllib.request import urlopen, Request
 
+# Third party imports
 from bs4 import BeautifulSoup
 
+# Local application imports
 from StockTracker import *
 
 
