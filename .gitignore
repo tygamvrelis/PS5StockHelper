@@ -132,3 +132,4 @@ dmypy.json
 .idea/modules.xml
 .idea/PS5StockHelper.iml
 .idea/vcs.xml
+email_info.json
