@@ -36,3 +36,5 @@ This app also supports email notifications. To use this feature, you will need a
 ```
 
 With all this done, start the app using the `--email` option, i.e., `python App.py --email`. If it is your first time starting the stock helper app with this gmail account, you will be asked for your password. This password will be stored in your system's [keyring](https://pypi.org/project/keyring/) so that you don't need to enter it next time. If your credentials are valid, then you should receive a test email confirming that email notifications are working. If that's the case, then you should receive an email whenever a drop is detected!
+
+If you accidentally enter your password incorrectly and save it in the keyring, the stock helper won't give you a chance to fix it. As a quick workaround for this, you can clear email credentials saved in the keyring by running the command `python ClearEmailCredentials.py`.
