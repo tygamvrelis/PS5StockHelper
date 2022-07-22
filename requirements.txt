@@ -8,7 +8,7 @@ cssutils==2.3.0
 idna==3.2
 importlib-metadata==4.8.1
 keyring==23.1.0
-lxml==4.6.5
+lxml==4.9.1
 premailer==3.10.0
 PySocks==1.7.1
 pywin32-ctypes==0.2.0
